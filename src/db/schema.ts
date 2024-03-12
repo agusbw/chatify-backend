@@ -18,7 +18,7 @@ export const users = pgTable("users", {
 
 export const rooms = pgTable("rooms", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
+  name: varchar("name", { length: 256 }).unique(),
   code: varchar("code", { length: 256 }).unique(),
   creatorId: integer("creator_id").references(() => users.id, {
     onDelete: "cascade",
