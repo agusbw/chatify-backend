@@ -4,8 +4,11 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import { loadMessagesFromFile, saveMessagesToFile } from "./message-handler";
 import { Message } from "./utils/types";
-import publicRoute from "./routes/public/public-routes";
+import publicRoute from "./routes/public-routes";
 import errorMiddleware from "./middleware/error-middleware";
+import configurePassport from "./utils/passport-config";
+import passport from "passport";
+import protectedRoute from "./routes/protected-routes";
 
 dotenv.config();
 
@@ -14,7 +17,10 @@ const server = createServer(app);
 const port = process.env.PORT;
 
 app.use(express.json());
+configurePassport();
+app.use(passport.initialize());
 app.use(publicRoute);
+app.use(protectedRoute);
 app.use(errorMiddleware);
 
 let messages: Message[] = loadMessagesFromFile();

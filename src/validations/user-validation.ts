@@ -10,3 +10,8 @@ export const register = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const login = z.object({
+  password: z.string().min(1),
+  username: z.string().min(1),
+});

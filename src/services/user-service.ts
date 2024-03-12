@@ -1,11 +1,12 @@
 import { db } from "../db";
 import { users } from "../db/schema";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import { eq } from "drizzle-orm";
 import * as userValidation from "../validations/user-validation";
 import validate from "../validations";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
+import jwt from "jsonwebtoken";
 
 async function register(req: Request) {
   // validate the user data
@@ -34,4 +35,37 @@ async function register(req: Request) {
   return data;
 }
 
-export { register };
+async function login(req: Request) {
+  const { username, password } = validate(userValidation.login, req);
+
+  const user = await db.query.users.findFirst({
+    where: eq(users.username, username),
+  });
+
+  if (!user) {
+    throw new ResponseError(400, "Username or password is incorrect");
+  }
+
+  const isPasswordValid = await compare(password, user.password);
+
+  if (!isPasswordValid) {
+    throw new ResponseError(400, "Username or password is incorrect");
+  }
+
+  const token = jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+
+  return {
+    token,
+  };
+}
+
+export { register, login };

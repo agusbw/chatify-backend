@@ -12,7 +12,6 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: varchar("username", { length: 256 }).unique(),
   password: text("password"),
-  session: text("session"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
