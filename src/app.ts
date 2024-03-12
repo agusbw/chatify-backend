@@ -4,13 +4,18 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import { loadMessagesFromFile, saveMessagesToFile } from "./message-handler";
 import { Message } from "./utils/types";
-import { db } from "./db";
+import publicRoute from "./routes/public/public-routes";
+import errorMiddleware from "./middleware/error-middleware";
 
 dotenv.config();
 
 const app = express();
 const server = createServer(app);
 const port = process.env.PORT;
+
+app.use(express.json());
+app.use(publicRoute);
+app.use(errorMiddleware);
 
 let messages: Message[] = loadMessagesFromFile();
 
@@ -19,13 +24,6 @@ const io = new Server(server, {
     origin: "*",
   },
 });
-
-app.get("/", async (req, res) => {
-  const data = await db.query.users.findMany();
-  res.json(data);
-});
-
-app.post("/register", (req, res) => {});
 
 io.on("connection", (socket) => {
   io.emit("message-sent", messages);
