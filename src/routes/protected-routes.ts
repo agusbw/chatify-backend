@@ -6,12 +6,13 @@ const protectedRoute: Router = express.Router();
 
 protectedRoute.use(authenticateJWT);
 
-protectedRoute.get("/api/protected", (req, res) => {
+protectedRoute.get("/api/verify-token", (req, res) => {
   res.json({
     message: "authenticated",
   });
 });
 
 protectedRoute.post("/api/rooms", roomController.createRoom);
+protectedRoute.get("/api/rooms", roomController.getUserJoinedRooms);
 
 export default protectedRoute;

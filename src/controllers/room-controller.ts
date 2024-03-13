@@ -13,3 +13,16 @@ export async function createRoom(
     next(err);
   }
 }
+
+export async function getUserJoinedRooms(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const rooms = await roomService.getUserJoinedRooms(req);
+    res.json(rooms);
+  } catch (err) {
+    next(err);
+  }
+}

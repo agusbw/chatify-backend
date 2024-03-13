@@ -17,7 +17,8 @@ function errorMiddleware(
   }
 
   if (err instanceof ZodError) {
-    return res.status(400).json({ error: err.issues }).end();
+    const errMessage = err.errors.map((error) => error.message).join(",");
+    return res.status(400).json({ error: errMessage }).end();
   }
 
   // Log the error for debugging

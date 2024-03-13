@@ -12,6 +12,6 @@ export const register = z
   });
 
 export const login = z.object({
-  password: z.string().min(1),
-  username: z.string().min(1),
+  password: z.string().min(1, "Password is required"),
+  username: z.string().min(1, "Username is required"),
 });

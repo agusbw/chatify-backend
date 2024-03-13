@@ -4,7 +4,7 @@ import * as roomValidation from "../validations/room-validation";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 import { generateUniqueCode } from "../utils";
-import { rooms } from "../db/schema";
+import { rooms, usersToRooms } from "../db/schema";
 import ResponseError from "../utils/response-error";
 
 type NewRoom = typeof rooms.$inferInsert;
@@ -28,9 +28,26 @@ export async function create(req: Request) {
     code: generateUniqueCode(),
   };
 
-  return await db
-    .insert(rooms)
-    .values(newRoom)
-    .onConflictDoNothing()
-    .returning();
+  const insert = await db.insert(rooms).values(newRoom).returning();
+
+  const newUsersToRooms = {
+    userId: req.user.id,
+    roomId: insert[0].id,
+  };
+
+  await db.insert(usersToRooms).values(newUsersToRooms).returning();
+
+  return insert[0];
+}
+
+export async function getUserJoinedRooms(req: Request) {
+  const rooms = await db.query.usersToRooms.findMany({
+    where: eq(usersToRooms.userId, req.user.id),
+    with: {
+      room: true,
+    },
+  });
+  const data = rooms.map((room) => room.room);
+
+  return data;
 }
