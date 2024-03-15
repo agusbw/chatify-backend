@@ -2,7 +2,7 @@ import { Request } from "express";
 import validate from "../validations";
 import * as roomValidation from "../validations/room-validation";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { generateUniqueCode } from "../utils";
 import { rooms, usersToRooms } from "../db/schema";
 import ResponseError from "../utils/response-error";
@@ -47,7 +47,48 @@ export async function getUserJoinedRooms(req: Request) {
       room: true,
     },
   });
-  const data = rooms.map((room) => room.room);
+  const data = rooms
+    .sort((a, b) => {
+      return b.joinedAt.getTime() - a.joinedAt.getTime();
+    })
+    .map((room) => room.room);
 
   return data;
+}
+
+export async function joinRoom(req: Request) {
+  const { code } = validate(roomValidation.join, req);
+
+  const room = await db.query.rooms.findFirst({
+    where: eq(rooms.code, code),
+  });
+
+  console.log(room);
+
+  if (!room) {
+    throw new ResponseError(404, "Room not found");
+  }
+
+  const userToRoom = await db
+    .select()
+    .from(usersToRooms)
+    .where(
+      sql`${usersToRooms.userId} = ${req.user.id} and ${usersToRooms.roomId} = ${room.id}`
+    );
+
+  if (userToRoom.length > 0) {
+    throw new ResponseError(400, "You are already in this room");
+  }
+
+  const newUsersToRooms = {
+    userId: req.user.id,
+    roomId: room.id,
+  };
+
+  await db.insert(usersToRooms).values(newUsersToRooms).returning();
+
+  return {
+    message: "Room joined successfully",
+    room: room,
+  };
 }

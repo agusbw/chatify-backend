@@ -26,3 +26,16 @@ export async function getUserJoinedRooms(
     next(err);
   }
 }
+
+export async function joinRoom(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const room = await roomService.joinRoom(req);
+    res.json(room);
+  } catch (err) {
+    next(err);
+  }
+}

@@ -14,5 +14,6 @@ protectedRoute.get("/api/verify-token", (req, res) => {
 
 protectedRoute.post("/api/rooms", roomController.createRoom);
 protectedRoute.get("/api/rooms", roomController.getUserJoinedRooms);
+protectedRoute.post("/api/rooms/join", roomController.joinRoom);
 
 export default protectedRoute;

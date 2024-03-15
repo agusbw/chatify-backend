@@ -51,6 +51,7 @@ export const usersToRooms = pgTable(
       .references(() => rooms.id, {
         onDelete: "cascade",
       }),
+    joinedAt: timestamp("joined_at").defaultNow(),
   },
   (table) => {
     return {

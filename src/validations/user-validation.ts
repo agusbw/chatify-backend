@@ -2,9 +2,21 @@ import { z } from "zod";
 
 export const register = z
   .object({
-    password: z.string().min(6),
-    username: z.string().min(2),
-    confirmPassword: z.string().min(6),
+    password: z
+      .string({
+        required_error: "Password is required",
+      })
+      .min(6, "Password must be at least 6 characters"),
+    username: z
+      .string({
+        required_error: "Username is required",
+      })
+      .min(2, "Username must be at least 2 characters"),
+    confirmPassword: z
+      .string({
+        required_error: "Confirm password is required",
+      })
+      .min(6, "Password must be at least 6 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -12,6 +24,14 @@ export const register = z
   });
 
 export const login = z.object({
-  password: z.string().min(1, "Password is required"),
-  username: z.string().min(1, "Username is required"),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(1, "Password is required"),
+  username: z
+    .string({
+      required_error: "Username is required",
+    })
+    .min(1, "Username is required"),
 });

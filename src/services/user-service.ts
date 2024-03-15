@@ -65,6 +65,10 @@ async function login(req: Request) {
 
   return {
     token,
+    user: {
+      id: user.id,
+      username: user.username,
+    },
   };
 }
 
