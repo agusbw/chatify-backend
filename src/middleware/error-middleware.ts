@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import ResponseError from "../utils/response-error";
 
 function errorMiddleware(
-  err: any,
+  err: ResponseError | ZodError | Error | null,
   req: Request,
   res: Response,
   next: NextFunction

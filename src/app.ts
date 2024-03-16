@@ -2,14 +2,14 @@ import express from "express";
 import { createServer } from "node:http";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
-import { loadMessagesFromFile, saveMessagesToFile } from "./message-handler";
 import cors from "cors";
-import { Message } from "./utils/types";
 import publicRoute from "./routes/public-routes";
 import errorMiddleware from "./middleware/error-middleware";
 import configurePassport from "./utils/passport-config";
 import passport from "passport";
 import protectedRoute from "./routes/protected-routes";
+import { ServerToClientEvents, ClientToServerEvents } from "./utils/types";
+import initializeSocket from "./sockets/socket-manager";
 
 dotenv.config();
 
@@ -28,23 +28,13 @@ app.use(errorMiddleware);
 const server = createServer(app);
 const port = process.env.PORT;
 
-let messages: Message[] = loadMessagesFromFile();
-
-const io = new Server(server, {
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
     origin: "*",
   },
 });
 
-io.on("connection", (socket) => {
-  io.emit("message-sent", messages);
-
-  socket.on("message-sent", (data: Message) => {
-    messages.push(data);
-    saveMessagesToFile(messages);
-    io.emit("message-sent", messages);
-  });
-});
+initializeSocket(io);
 
 // start the Express server and socket.io server
 server.listen(port, () => {
