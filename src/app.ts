@@ -14,6 +14,13 @@ import initializeSocket from "./sockets/socket-manager";
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
+const port = process.env.PORT;
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.use(cors());
 app.use(express.json());
@@ -24,15 +31,6 @@ app.use(passport.initialize());
 app.use(publicRoute);
 app.use(protectedRoute);
 app.use(errorMiddleware);
-
-const server = createServer(app);
-const port = process.env.PORT;
-
-const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
-  cors: {
-    origin: "*",
-  },
-});
 
 initializeSocket(io);
 

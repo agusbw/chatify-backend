@@ -6,6 +6,7 @@ import * as userValidation from "../validations/user-validation";
 import validate from "../validations";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
+import { JwtPayload } from "../utils/types";
 import jwt from "jsonwebtoken";
 
 async function register(req: Request) {
@@ -56,10 +57,10 @@ async function login(req: Request) {
     {
       id: user.id,
       username: user.username,
-    },
+    } as JwtPayload,
     process.env.JWT_SECRET,
     {
-      expiresIn: "1h",
+      expiresIn: "6h",
     }
   );
 

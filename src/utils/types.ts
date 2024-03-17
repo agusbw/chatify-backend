@@ -21,3 +21,8 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   messageSent: (message: IncommingMessage) => void;
 }
+
+export type JwtPayload = {
+  id: number;
+  username: string;
+};

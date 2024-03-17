@@ -3,9 +3,10 @@ import { messages } from "../db/schema";
 import { db } from "../db";
 import { IncommingMessage } from "../utils/types";
 import { ClientToServerEvents, ServerToClientEvents } from "../utils/types";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export default function initializeSocket(
-  io: Server<ClientToServerEvents, ServerToClientEvents>
+  io: Server<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap>
 ) {
   io.on("connection", (socket) => {
     socket.on("messageSent", async (incomingMsg: IncommingMessage) => {
