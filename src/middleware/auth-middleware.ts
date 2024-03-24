@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { users } from "../db/schema";
-
-type User = typeof users.$inferSelect;
+import { User } from "../utils/types";
 
 // Define a middleware function to populate req.user
 export const authenticateJWT = (

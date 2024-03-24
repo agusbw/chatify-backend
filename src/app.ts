@@ -28,6 +28,15 @@ app.use(express.json());
 configurePassport();
 app.use(passport.initialize());
 
+io.engine.use((req, res, next) => {
+  const isHandshake = req._query.sid === undefined;
+  if (isHandshake) {
+    passport.authenticate("jwt", { session: false })(req, res, next);
+  } else {
+    next();
+  }
+});
+
 app.use(publicRoute);
 app.use(protectedRoute);
 app.use(errorMiddleware);

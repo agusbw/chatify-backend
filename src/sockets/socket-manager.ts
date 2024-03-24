@@ -38,7 +38,7 @@ export default function initializeSocket(
           });
         } else {
           socket.emit("messageNotSent", {
-            error: "Failed to save message to database",
+            error: "Failed to sent message",
             messageId: incomingMsg.id,
           });
         }
@@ -48,7 +48,7 @@ export default function initializeSocket(
           error
         );
         socket.emit("messageNotSent", {
-          error: "An error occurred while saving message to database",
+          error: "Failed to sent message",
           messageId: incomingMsg.id,
         });
       }

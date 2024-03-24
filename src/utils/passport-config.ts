@@ -18,7 +18,10 @@ export default function configurePassport() {
         });
 
         if (user) {
-          return done(null, user);
+          return done(null, {
+            username: user.username,
+            id: user.id,
+          });
         } else {
           return done(null, false);
           // or you could create a new account
