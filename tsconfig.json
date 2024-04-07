@@ -1,13 +1,14 @@
 {
-  // Add the missing file path
   "include": ["**/*.ts", "src/utils/custom.d.ts"],
   "compilerOptions": {
     "module": "ESNext",
     "esModuleInterop": true,
     "target": "es2021",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": "dist"
   },
+  "exclude": ["node_modules"],
   "lib": ["es2021"]
 }
