@@ -6,6 +6,7 @@
     "target": "es2021",
     "moduleResolution": "Node",
     "sourceMap": true,
+    "strict": true,
     "skipLibCheck": true,
     "outDir": "dist"
   },
