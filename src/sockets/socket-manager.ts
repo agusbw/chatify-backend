@@ -1,45 +1,61 @@
 import { Server } from "socket.io";
 import { messages } from "../db/schema";
 import { db } from "../db";
-import { IncommingMessage } from "../utils/types";
+import { eq } from "drizzle-orm";
 import { ClientToServerEvents, ServerToClientEvents } from "../utils/types";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { incomingMessageSchema } from "../validations/message-validation";
 
 export default function initializeSocket(
   io: Server<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap>
 ) {
   io.on("connection", (socket) => {
-    socket.on("messageSent", async (incomingMsg: IncommingMessage) => {
+    socket.on("sendMessage", async (req) => {
       try {
+        const newMessage = incomingMessageSchema.parse(req);
+
         const res = await db
           .insert(messages)
           .values({
-            id: incomingMsg.id,
-            messageText: incomingMsg.messageText,
-            roomId: incomingMsg.roomId,
-            senderId: incomingMsg.senderId,
+            messageText: newMessage.messageText,
+            id: newMessage.id,
+            roomId: newMessage.room.id,
+            senderId: newMessage.sender.id,
+            sentAt: new Date(),
           })
           .returning();
 
         if (res.length > 0) {
-          const message = res[0];
-          io.emit("incomingMessage", {
-            id: message.id,
-            messageText: message.messageText,
-            roomId: message.roomId,
-            room: {
-              name: incomingMsg.room.name,
+          const message = await db.query.messages.findFirst({
+            with: {
+              room: {
+                columns: {
+                  name: true,
+                  id: true,
+                },
+              },
+              sender: {
+                columns: {
+                  username: true,
+                  id: true,
+                },
+              },
             },
-            sender: {
-              username: incomingMsg.sender.username,
+            columns: {
+              id: true,
+              messageText: true,
+              sentAt: true,
             },
-            senderId: message.senderId,
-            sentAt: message.sentAt,
+            where: (messages, { eq }) => eq(messages.id, newMessage.id),
           });
+
+          if (message) {
+            io.emit("successSendMessage", message);
+          }
         } else {
-          socket.emit("messageNotSent", {
+          socket.emit("errorSendMessage", {
             error: "Failed to sent message",
-            messageId: incomingMsg.id,
+            messageId: req.id,
           });
         }
       } catch (error) {
@@ -47,9 +63,9 @@ export default function initializeSocket(
           "Error occurred while saving message to the database:",
           error
         );
-        socket.emit("messageNotSent", {
+        socket.emit("errorSendMessage", {
           error: "Failed to sent message",
-          messageId: incomingMsg.id,
+          messageId: req.id,
         });
       }
     });

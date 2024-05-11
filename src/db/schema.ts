@@ -7,35 +7,42 @@ import {
   timestamp,
   integer,
   primaryKey,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  username: varchar("username", { length: 256 }).unique(),
-  password: text("password"),
-  createdAt: timestamp("created_at").defaultNow(),
+  username: varchar("username", { length: 256 }).unique().notNull(),
+  password: text("password").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const rooms = pgTable("rooms", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }).unique(),
-  code: varchar("code", { length: 256 }).unique(),
-  creatorId: integer("creator_id").references(() => users.id, {
-    onDelete: "cascade",
-  }),
-  createdAt: timestamp("created_at").defaultNow(),
+  name: varchar("name", { length: 256 }).unique().notNull(),
+  code: varchar("code", { length: 256 }).unique().notNull(),
+  creatorId: integer("creator_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const messages = pgTable("messages", {
-  id: serial("id").primaryKey(),
-  messageText: text("message_text"),
-  sentAt: timestamp("sent_at").defaultNow(),
-  roomId: integer("room_id").references(() => rooms.id, {
-    onDelete: "cascade",
-  }),
-  senderId: integer("sender_id").references(() => users.id, {
-    onDelete: "cascade",
-  }),
+  id: uuid("id").primaryKey(),
+  messageText: text("message_text").notNull(),
+  sentAt: timestamp("sent_at").defaultNow().notNull(),
+  roomId: integer("room_id")
+    .references(() => rooms.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  senderId: integer("sender_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
 });
 
 export const usersToRooms = pgTable(

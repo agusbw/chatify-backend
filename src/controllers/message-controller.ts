@@ -7,7 +7,7 @@ export async function getMessages(
   next: NextFunction
 ) {
   try {
-    const messages = await messageService.get(req);
+    const messages = await messageService.getMessagesByRoomID(req);
     res.json(messages);
   } catch (err) {
     next(err);

@@ -5,7 +5,7 @@ import * as messageValidation from "../validations/message-validation";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
 
-export async function get(req: Request) {
+export async function getMessagesByRoomID(req: Request) {
   const roomId = messageValidation.roomIdSchema.parse(req.params.roomId);
 
   const isMember = await db.query.usersToRooms.findFirst({
