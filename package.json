@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --es-module-specifier-resolution=node dist/src/app.js",
     "dev": "npx tsx watch src/app.ts",
-    "db:push": "drizzle-kit push:pg",
+    "db:push": "drizzle-kit push",
     "build": "tsc",
     "db:studio": "drizzle-kit studio"
   },
@@ -26,6 +26,7 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
     "socket.io": "^4.7.4",
+    "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -37,7 +38,8 @@
     "@types/passport": "^1.0.16",
     "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.11.2",
-    "drizzle-kit": "^0.20.14",
+    "@types/uuid": "^9.0.8",
+    "drizzle-kit": "0.21.1",
     "tsx": "^4.7.2",
     "typescript": "^5.4.2"
   }
