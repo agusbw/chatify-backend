@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import ResponseError from "../utils/response-error";
+import { DrizzleError } from "drizzle-orm";
 
 function errorMiddleware(
   err: ResponseError | ZodError | Error | null,
@@ -21,7 +22,11 @@ function errorMiddleware(
     return res.status(400).json({ error: errMessage }).end();
   }
 
-  // Log the error for debugging
+  if (err instanceof DrizzleError) {
+    return res.status(400).json({ error: err.message }).end();
+  }
+
+  // Log the error for debugging unhandled error
   console.error("Unhandled error:", err);
 
   return res

@@ -1,6 +1,6 @@
 import { users } from "../db/schema";
 import { z } from "zod";
-import { incomingMessageSchema } from "../validations/message-validation";
+import * as messageValidation from "../validations/message-validation";
 
 export type User = typeof users.$inferSelect;
 
@@ -18,7 +18,7 @@ export type SuccessSendMessage = {
   };
 };
 
-export type IncomingMessageSchema = z.infer<typeof incomingMessageSchema>;
+export type IncomingMessage = z.infer<typeof messageValidation.incomingMessage>;
 
 export interface ServerToClientEvents {
   successSendMessage: (message: SuccessSendMessage) => void;
@@ -26,7 +26,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  sendMessage: (message: Omit<IncomingMessageSchema, "sentAt">) => void;
+  sendMessage: (message: Omit<IncomingMessage, "sentAt">) => void;
 }
 
 export type JwtPayload = {

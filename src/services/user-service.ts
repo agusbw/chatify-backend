@@ -11,7 +11,7 @@ import jwt from "jsonwebtoken";
 
 async function register(req: Request) {
   // validate the user data
-  const userData = validate(userValidation.register, req);
+  const userData = validate(userValidation.register, req, "body");
 
   // check if the username already exists
   const user = await db.query.users.findFirst({
@@ -37,7 +37,7 @@ async function register(req: Request) {
 }
 
 async function login(req: Request) {
-  const { username, password } = validate(userValidation.login, req);
+  const { username, password } = validate(userValidation.login, req, "body");
 
   const user = await db.query.users.findFirst({
     where: eq(users.username, username),
@@ -58,7 +58,7 @@ async function login(req: Request) {
       id: user.id,
       username: user.username,
     } as JwtPayload,
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET as string,
     {
       expiresIn: "6h",
     }

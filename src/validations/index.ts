@@ -1,12 +1,20 @@
 import { Request } from "express";
 import { ZodSchema } from "zod";
 
-const validate = (schema: ZodSchema, req: Request) => {
-  const result = schema.safeParse(req.body);
+const validate = <T>(
+  schema: ZodSchema<T>,
+  req: Request,
+  requestType: "body" | "params"
+) => {
+  const result =
+    requestType === "body"
+      ? schema.safeParse(req.body)
+      : schema.safeParse(req.params);
+
   if (result.success === false) {
     throw result.error;
   } else {
-    return result.data;
+    return result.data as T;
   }
 };
 

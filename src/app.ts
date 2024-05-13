@@ -9,13 +9,13 @@ import configurePassport from "./utils/passport-config";
 import passport from "passport";
 import protectedRoute from "./routes/protected-routes";
 import { ServerToClientEvents, ClientToServerEvents } from "./utils/types";
-import initializeSocket from "./sockets/socket-manager";
+import initializeSocket from "./sockets/socket-handler";
 
 dotenv.config();
 
 const app = express();
 const server = createServer(app);
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
     origin: "*",
@@ -28,7 +28,8 @@ app.use(express.json());
 configurePassport();
 app.use(passport.initialize());
 
-io.engine.use((req, res, next) => {
+// TODO: make it typesafe
+io.engine.use((req: any, res: any, next: any) => {
   const isHandshake = req._query.sid === undefined;
   if (isHandshake) {
     passport.authenticate("jwt", { session: false })(req, res, next);

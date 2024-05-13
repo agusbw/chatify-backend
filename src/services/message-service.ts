@@ -4,17 +4,17 @@ import { eq, asc } from "drizzle-orm";
 import * as messageValidation from "../validations/message-validation";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
+import validate from "../validations";
 
-export async function getMessagesByRoomID(req: Request) {
-  const roomId = messageValidation.roomIdSchema.parse(req.params.roomId);
+export async function getMessagesByRoomId(req: Request) {
+  const { roomId } = validate(messageValidation.roomIdParams, req, "params");
 
   const isMember = await db.query.usersToRooms.findFirst({
     where: eq(usersToRooms.userId, req.user.id),
   });
 
-  if (!isMember) {
+  if (!isMember)
     throw new ResponseError(403, "You are not a member of this room");
-  }
 
   const results = await db.query.messages.findMany({
     where: eq(messages.roomId, roomId),
@@ -23,13 +23,20 @@ export async function getMessagesByRoomID(req: Request) {
       sender: {
         columns: {
           username: true,
+          id: true,
         },
       },
       room: {
         columns: {
           name: true,
+          id: true,
         },
       },
+    },
+    columns: {
+      id: true,
+      messageText: true,
+      sentAt: true,
     },
   });
 
