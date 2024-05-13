@@ -1,34 +1,39 @@
 import passport from "passport";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import {
+  Strategy as JwtStrategy,
+  ExtractJwt,
+  StrategyOptionsWithRequest,
+} from "passport-jwt";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 import { users } from "../db/schema";
 
 export default function configurePassport() {
-  const opts = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
-  };
-
   passport.use(
-    new JwtStrategy(opts, async (jwt_payload, done) => {
-      try {
-        const user = await db.query.users.findFirst({
-          where: eq(users.username, jwt_payload.username),
-        });
-
-        if (user) {
-          return done(null, {
-            username: user.username,
-            id: user.id,
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET as string,
+      },
+      async (jwt_payload, done) => {
+        try {
+          const user = await db.query.users.findFirst({
+            where: eq(users.username, jwt_payload.username),
+            columns: {
+              id: true,
+              username: true,
+            },
           });
-        } else {
-          return done(null, false);
-          // or you could create a new account
+
+          if (user) {
+            return done(null, user);
+          } else {
+            return done(null, false);
+          }
+        } catch (err) {
+          return done(err, false);
         }
-      } catch (err) {
-        return done(err, false);
       }
-    })
+    )
   );
 }
