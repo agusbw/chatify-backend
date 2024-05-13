@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "src/utils/custom.d.ts"],
+  "include": ["**/*.ts", "src/utils/express.d.ts"],
   "compilerOptions": {
     "module": "ESNext",
     "esModuleInterop": true,

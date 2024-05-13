@@ -1,10 +1,9 @@
 import { Server } from "socket.io";
 import { messages } from "../db/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
 import { ClientToServerEvents, ServerToClientEvents } from "../utils/types";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { incomingMessageSchema } from "../validations/message-validation";
+import { incomingMessage } from "../validations/message-validation";
 
 export default function initializeSocket(
   io: Server<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap>
@@ -12,8 +11,7 @@ export default function initializeSocket(
   io.on("connection", (socket) => {
     socket.on("sendMessage", async (req) => {
       try {
-        const newMessage = incomingMessageSchema.parse(req);
-
+        const newMessage = incomingMessage.parse(req);
         const res = await db
           .insert(messages)
           .values({
