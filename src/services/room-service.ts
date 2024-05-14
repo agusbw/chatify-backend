@@ -2,7 +2,7 @@ import { Request } from "express";
 import validate from "../validations";
 import * as roomValidation from "../validations/room-validation";
 import { db } from "../db";
-import { and, eq, ne } from "drizzle-orm";
+import { and, eq, ilike, ne } from "drizzle-orm";
 import { generateUniqueCode } from "../utils";
 import { rooms, usersToRooms } from "../db/schema";
 import ResponseError from "../utils/response-error";
@@ -11,7 +11,7 @@ export async function create(req: Request) {
   const { name } = validate(roomValidation.create, req, "body");
 
   const room = await db.query.rooms.findFirst({
-    where: eq(rooms.name, name),
+    where: ilike(rooms.name, name.toLowerCase()),
   });
 
   if (room) {
@@ -83,12 +83,21 @@ export async function getRoomById(req: Request) {
     where: eq(rooms.id, roomId),
     with: {
       usersToRooms: {
-        columns: {},
+        columns: {
+          joinedAt: true,
+        },
         with: {
           user: {
             columns: {
               id: true,
               username: true,
+            },
+          },
+          room: {
+            columns: {
+              creatorId: true,
+              name: true,
+              id: true,
             },
           },
         },

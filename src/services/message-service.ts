@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { messages, usersToRooms } from "../db/schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 import * as messageValidation from "../validations/message-validation";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
@@ -10,7 +10,10 @@ export async function getMessagesByRoomId(req: Request) {
   const { roomId } = validate(messageValidation.roomIdParams, req, "params");
 
   const isMember = await db.query.usersToRooms.findFirst({
-    where: eq(usersToRooms.userId, req.user.id),
+    where: and(
+      eq(usersToRooms.userId, req.user.id),
+      eq(usersToRooms.roomId, roomId)
+    ),
   });
 
   if (!isMember)

@@ -5,6 +5,7 @@ export const create = z.object({
     .string({
       required_error: "Chat room name is required.",
     })
+    .trim()
     .min(1, "Chat room name is required."),
 });
 
