@@ -13,19 +13,8 @@ protectedRoute.get("/api/verify-token", (req, res) => {
   });
 });
 
-protectedRoute.post("/api/rooms", roomController.createRoom);
 protectedRoute.get("/api/rooms", roomController.getUserJoinedRooms);
-protectedRoute.post("/api/rooms/join", roomController.joinRoom);
 protectedRoute.get("/api/rooms/:roomId", roomController.getRoomById);
-protectedRoute.delete("/api/rooms/:roomId", roomController.deleteRoom);
-protectedRoute.delete("/api/rooms/:roomId/leave", roomController.leaveRoom);
-
-// need realtime data, move to socket handler
-// protectedRoute.delete(
-//   "/api/rooms/:roomId/member/:memberId",
-//   roomController.kickMember
-// );
-
 protectedRoute.patch(
   "/api/rooms/:roomId/refresh-code",
   roomController.refreshCode
