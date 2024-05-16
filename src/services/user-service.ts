@@ -6,7 +6,7 @@ import * as userValidation from "../validations/user-validation";
 import validate from "../validations";
 import { Request } from "express";
 import ResponseError from "../utils/response-error";
-import { JwtPayload } from "../utils/types";
+import { type JwtPayload } from "../utils/types";
 import jwt from "jsonwebtoken";
 
 async function register(req: Request) {

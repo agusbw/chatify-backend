@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { User } from "../utils/types";
+import { type User } from "../utils/types";
 
 // Define a middleware function to populate req.user
 export const authenticateJWT = (

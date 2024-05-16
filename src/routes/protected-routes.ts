@@ -19,10 +19,13 @@ protectedRoute.post("/api/rooms/join", roomController.joinRoom);
 protectedRoute.get("/api/rooms/:roomId", roomController.getRoomById);
 protectedRoute.delete("/api/rooms/:roomId", roomController.deleteRoom);
 protectedRoute.delete("/api/rooms/:roomId/leave", roomController.leaveRoom);
-protectedRoute.delete(
-  "/api/rooms/:roomId/member/:memberId",
-  roomController.kickMember
-);
+
+// need realtime data, move to socket handler
+// protectedRoute.delete(
+//   "/api/rooms/:roomId/member/:memberId",
+//   roomController.kickMember
+// );
+
 protectedRoute.patch(
   "/api/rooms/:roomId/refresh-code",
   roomController.refreshCode

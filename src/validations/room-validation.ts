@@ -17,9 +17,9 @@ export const join = z.object({
     .min(1, "Room code is required."),
 });
 
-export const roomIdParams = z.object({ roomId: z.coerce.number() });
+export const roomId = z.object({ roomId: z.coerce.number() });
 
-export const kickMemberParams = z.object({
+export const kickMember = z.object({
   roomId: z.coerce.number(),
   memberId: z.coerce.number(),
 });
