@@ -51,7 +51,7 @@ export async function handleCreateRoom({
   } catch (error) {
     let message: string | undefined;
     if (error instanceof Error) {
-      error = error.message;
+      message = error.message;
     }
     socket.emit("errorCreateRoom", {
       error: message ? message : "Failed to create the room!",
@@ -101,7 +101,7 @@ export async function handleJoinRoom({
   } catch (error) {
     let message: string | undefined;
     if (error instanceof Error) {
-      error = error.message;
+      message = error.message;
     }
     socket.emit("errorJoinRoom", {
       error: message ? message : "Failed to join the room!",
@@ -180,7 +180,7 @@ export async function handleLeaveRoom({
   } catch (error) {
     let message: string | undefined;
     if (error instanceof Error) {
-      error = error.message;
+      message = error.message;
     }
     socket.emit("errorLeaveRoom", {
       error: message ? message : "Failed to leave the room!",
@@ -232,7 +232,7 @@ export async function handleDeleteRoom({
   } catch (error) {
     let message: string | undefined;
     if (error instanceof Error) {
-      error = error.message;
+      message = error.message;
     }
     socket.emit("errorDeleteRoom", {
       error: message ? message : "Failed to delete the room!",

@@ -54,11 +54,14 @@ export async function handleKickMember({
       memberId: validatedReq.memberId,
     });
   } catch (error) {
+    let message: string | undefined;
     if (error instanceof Error) {
-      console.error("Error kicking user:", error.message);
+      message = error.message;
     }
     socket.emit("errorKickMember", {
-      error: "Failed to kick member",
+      error: message ? message : "Failed to kick member!",
     });
+
+    console.log(error);
   }
 }

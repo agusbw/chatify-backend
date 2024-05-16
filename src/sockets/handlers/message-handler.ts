@@ -70,15 +70,14 @@ export async function handleSendMessage({
       });
     }
   } catch (error) {
-    console.error(
-      "Error occurred while saving message to the database:",
-      error
-    );
+    let message: string | undefined;
     if (error instanceof Error) {
-      socket.emit("errorSendMessage", {
-        error: error.message,
-        messageId: req.id,
-      });
+      message = error.message;
     }
+    socket.emit("errorSendMessage", {
+      error: message ? message : "Failed to send the message!",
+      messageId: req.id,
+    });
+    console.log(error);
   }
 }
