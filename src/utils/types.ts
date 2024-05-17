@@ -1,7 +1,7 @@
-import { users } from "../db/schema";
+import { users } from "../db/schema.js";
 import { z } from "zod";
-import * as messageValidation from "../validations/message-validation";
-import * as roomValidation from "../validations/room-validation";
+import * as messageValidation from "../validations/message-validation.js";
+import * as roomValidation from "../validations/room-validation.js";
 import { Socket, Server } from "socket.io";
 
 export type User = typeof users.$inferSelect;

@@ -1,7 +1,7 @@
 import express, { Router } from "express";
-import { authenticateJWT } from "../middleware/auth-middleware";
-import * as roomController from "../controllers/room-controller";
-import * as messageController from "../controllers/message-controller";
+import { authenticateJWT } from "../middleware/auth-middleware.js";
+import * as roomController from "../controllers/room-controller.js";
+import * as messageController from "../controllers/message-controller.js";
 
 const protectedRoute: Router = express.Router();
 

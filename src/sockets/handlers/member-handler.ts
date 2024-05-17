@@ -1,8 +1,8 @@
-import { db } from "../../db";
-import { kickMember } from "../../validations/room-validation";
-import { usersToRooms, rooms } from "../../db/schema";
+import { db } from "../../db/index.js";
+import { kickMember } from "../../validations/room-validation.js";
+import { usersToRooms, rooms } from "../../db/schema.js";
 import { eq, and } from "drizzle-orm";
-import type { KickMember, SocketHandler } from "../../utils/types";
+import type { KickMember, SocketHandler } from "../../utils/types.js";
 
 export async function handleKickMember({
   socket,

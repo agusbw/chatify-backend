@@ -1,5 +1,5 @@
-import * as userService from "../services/user-service";
-import { NextFunction, Request, Response } from "express";
+import * as userService from "../services/user-service.js";
+import type { NextFunction, Request, Response } from "express";
 
 async function registerUser(req: Request, res: Response, next: NextFunction) {
   try {

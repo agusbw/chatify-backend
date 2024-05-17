@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import ResponseError from "../utils/response-error";
+import ResponseError from "../utils/response-error.js";
 import { DrizzleError } from "drizzle-orm";
 
 function errorMiddleware(

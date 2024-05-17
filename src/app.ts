@@ -3,13 +3,16 @@ import { createServer } from "node:http";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import cors from "cors";
-import publicRoute from "./routes/public-routes";
-import errorMiddleware from "./middleware/error-middleware";
-import configurePassport from "./utils/passport-config";
+import publicRoute from "./routes/public-routes.js";
+import errorMiddleware from "./middleware/error-middleware.js";
+import configurePassport from "./utils/passport-config.js";
 import passport from "passport";
-import protectedRoute from "./routes/protected-routes";
-import type { ServerToClientEvents, ClientToServerEvents } from "./utils/types";
-import initializeSocket from "./sockets";
+import protectedRoute from "./routes/protected-routes.js";
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+} from "./utils/types.js";
+import initializeSocket from "./sockets/index.js";
 
 dotenv.config();
 

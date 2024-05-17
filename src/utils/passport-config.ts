@@ -1,12 +1,8 @@
 import passport from "passport";
-import {
-  Strategy as JwtStrategy,
-  ExtractJwt,
-  StrategyOptionsWithRequest,
-} from "passport-jwt";
-import { db } from "../db";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { db } from "../db/index.js";
 import { eq } from "drizzle-orm";
-import { users } from "../db/schema";
+import { users } from "../db/schema.js";
 
 export default function configurePassport() {
   passport.use(

@@ -1,8 +1,8 @@
-import { db } from "../../db";
-import { usersToRooms, messages } from "../../db/schema";
+import { db } from "../../db/index.js";
+import { usersToRooms, messages } from "../../db/schema.js";
 import { eq, and, count } from "drizzle-orm";
-import type { IncomingMessage, SocketHandler } from "../../utils/types";
-import { incomingMessage } from "../../validations/message-validation";
+import type { IncomingMessage, SocketHandler } from "../../utils/types.js";
+import { incomingMessage } from "../../validations/message-validation.js";
 
 export async function handleSendMessage({
   socket,
@@ -22,7 +22,7 @@ export async function handleSendMessage({
           eq(usersToRooms.roomId, newMessage.room.id)
         )
       );
-    if (isMember[0].count < 1) {
+    if (isMember[0] && isMember[0].count < 1) {
       throw new Error("You're not a member of this room!");
     }
     const res = await db

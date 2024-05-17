@@ -1,14 +1,14 @@
-import { rooms, usersToRooms } from "../../db/schema";
-import { generateUniqueCode } from "../../utils";
+import { rooms, usersToRooms } from "../../db/schema.js";
+import { generateUniqueCode } from "../../utils/index.js";
 import type {
   CreateRoom,
   JoinRoom,
   RoomId,
   SocketHandler,
-} from "../../utils/types";
-import { db } from "../../db";
+} from "../../utils/types.js";
+import { db } from "../../db/index.js";
 import { ilike, eq, and, ne } from "drizzle-orm";
-import * as roomValidation from "../../validations/room-validation";
+import * as roomValidation from "../../validations/room-validation.js";
 
 export async function handleCreateRoom({
   socket,
@@ -37,6 +37,11 @@ export async function handleCreateRoom({
         })
         .returning();
 
+      if (!insert[0]) {
+        tx.rollback();
+        return;
+      }
+
       await tx.insert(usersToRooms).values({
         userId,
         roomId: insert[0].id,
@@ -44,6 +49,10 @@ export async function handleCreateRoom({
 
       return insert[0];
     });
+    if (!result) {
+      throw new Error("Failed to create the room");
+    }
+
     socket.join(String(result.id));
     socket.emit("successCreateRoom", {
       roomId: result.id,
@@ -95,6 +104,10 @@ export async function handleJoinRoom({
         roomId: room.id,
       })
       .returning();
+
+    if (!result[0]) {
+      throw new Error("Failed to join the room!");
+    }
 
     socket.join(String(result[0].roomId));
     socket.emit("successJoinRoom");

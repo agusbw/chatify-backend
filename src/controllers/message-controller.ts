@@ -1,5 +1,5 @@
-import * as messageService from "../services/message-service";
-import { Request, Response, NextFunction } from "express";
+import * as messageService from "../services/message-service.js";
+import type { Request, Response, NextFunction } from "express";
 
 export async function getMessagesByRoomId(
   req: Request,

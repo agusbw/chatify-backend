@@ -1,5 +1,5 @@
-import * as roomService from "../services/room-service";
-import { Request, Response, NextFunction } from "express";
+import * as roomService from "../services/room-service.js";
+import type { Request, Response, NextFunction } from "express";
 
 export async function getUserJoinedRooms(
   req: Request,

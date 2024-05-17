@@ -1,11 +1,11 @@
 import { type Request } from "express";
-import validate from "../validations";
-import * as roomValidation from "../validations/room-validation";
-import { db } from "../db";
+import validate from "../validations/index.js";
+import * as roomValidation from "../validations/room-validation.js";
+import { db } from "../db/index.js";
 import { and, eq } from "drizzle-orm";
-import { generateUniqueCode } from "../utils";
-import { rooms, usersToRooms } from "../db/schema";
-import ResponseError from "../utils/response-error";
+import { generateUniqueCode } from "../utils/index.js";
+import { rooms, usersToRooms } from "../db/schema.js";
+import ResponseError from "../utils/response-error.js";
 
 export async function getUserJoinedRooms(req: Request) {
   const results = await db.query.usersToRooms.findMany({
@@ -14,7 +14,7 @@ export async function getUserJoinedRooms(req: Request) {
     with: {
       room: true,
     },
-    orderBy: (posts, { desc }) => [desc(posts.joinedAt)],
+    orderBy: (usersToRooms, { desc }) => [desc(usersToRooms.joinedAt)],
   });
   return results.map((result) => result.room);
 }

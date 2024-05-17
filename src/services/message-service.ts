@@ -1,10 +1,10 @@
-import { db } from "../db";
-import { messages, usersToRooms } from "../db/schema";
+import { db } from "../db/index.js";
+import { messages, usersToRooms } from "../db/schema.js";
 import { eq, asc, and } from "drizzle-orm";
-import * as messageValidation from "../validations/message-validation";
-import { Request } from "express";
-import ResponseError from "../utils/response-error";
-import validate from "../validations";
+import * as messageValidation from "../validations/message-validation.js";
+import { type Request } from "express";
+import ResponseError from "../utils/response-error.js";
+import validate from "../validations/index.js";
 
 export async function getMessagesByRoomId(req: Request) {
   const { roomId } = validate(messageValidation.roomIdParams, req, "params");

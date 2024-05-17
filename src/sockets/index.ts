@@ -1,19 +1,19 @@
 import { Server } from "socket.io";
-import { usersToRooms } from "../db/schema";
-import { db } from "../db";
+import { usersToRooms } from "../db/schema.js";
+import { db } from "../db/index.js";
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
-} from "../utils/types";
+} from "../utils/types.js";
 import { eq } from "drizzle-orm";
 import {
   handleCreateRoom,
   handleJoinRoom,
   handleDeleteRoom,
   handleLeaveRoom,
-} from "./handlers/room-handler";
-import { handleKickMember } from "./handlers/member-handler";
-import { handleSendMessage } from "./handlers/message-handler";
+} from "./handlers/room-handler.js";
+import { handleKickMember } from "./handlers/member-handler.js";
+import { handleSendMessage } from "./handlers/message-handler.js";
 
 export default function initializeSocket(
   io: Server<ClientToServerEvents, ServerToClientEvents>

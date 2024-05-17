@@ -1,12 +1,12 @@
-import { db } from "../db";
-import { users } from "../db/schema";
+import { db } from "../db/index.js";
+import { users } from "../db/schema.js";
 import { hash, compare } from "bcrypt";
 import { eq } from "drizzle-orm";
-import * as userValidation from "../validations/user-validation";
-import validate from "../validations";
-import { Request } from "express";
-import ResponseError from "../utils/response-error";
-import { type JwtPayload } from "../utils/types";
+import * as userValidation from "../validations/user-validation.js";
+import validate from "../validations/index.js";
+import { type Request } from "express";
+import ResponseError from "../utils/response-error.js";
+import { type JwtPayload } from "../utils/types.js";
 import jwt from "jsonwebtoken";
 
 async function register(req: Request) {
