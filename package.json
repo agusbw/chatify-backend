@@ -8,7 +8,7 @@
     "start": "node dist/src/app.js",
     "dev": "npx tsx watch src/app.ts",
     "db:push": "drizzle-kit push",
-    "build": "tsc",
+    "build": "drizzle-kit push && tsc",
     "db:studio": "drizzle-kit studio"
   },
   "keywords": [],
@@ -42,5 +42,6 @@
     "drizzle-kit": "0.21.1",
     "tsx": "^4.7.2",
     "typescript": "^5.4.2"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
