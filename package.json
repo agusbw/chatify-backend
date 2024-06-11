@@ -8,7 +8,7 @@
     "start": "node dist/src/app.js",
     "dev": "npx tsx watch src/app.ts",
     "db:push": "drizzle-kit push",
-    "build": "drizzle-kit push && tsc",
+    "build": "tsc",
     "db:studio": "drizzle-kit studio"
   },
   "keywords": [],
